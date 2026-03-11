@@ -83,12 +83,7 @@ async function submitPhrase(){
       }
 
       if(data.type === "text"){
-        terminalThenType(
-        [
-        "> ACCESSING ARCHIVE...",
-        "> DECRYPTING PAYLOAD...",
-        "> MESSAGE FOUND"
-        ],
+        typewriter(
         data.content,
         resultDiv
         );
@@ -108,7 +103,7 @@ async function submitPhrase(){
 
 }
 
-function terminalThenType(logLines, finalText, element, delayBetween = 1200) {
+function terminalThenType(logLines, finalText, element, delayBetween = 1000) {
   let lineIndex = 0;
 
   function printLine() {
@@ -124,7 +119,7 @@ function terminalThenType(logLines, finalText, element, delayBetween = 1200) {
   printLine();
 }
 
-function typeWriter(text, element, speed = 35){
+function typeWriter(text, element, speed = 30){
   let i = 0;
 
   function typing(){
