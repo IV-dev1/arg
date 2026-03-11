@@ -108,7 +108,7 @@ async function submitPhrase(){
 
 }
 
-function terminalThenType(logLines, finalText, element, delayBetween = 600) {
+function terminalThenType(logLines, finalText, element, delayBetween = 1200) {
   let lineIndex = 0;
 
   function printLine() {
@@ -124,7 +124,7 @@ function terminalThenType(logLines, finalText, element, delayBetween = 600) {
   printLine();
 }
 
-function typeWriter(text, element, speed = 20){
+function typeWriter(text, element, speed = 35){
   let i = 0;
 
   function typing(){
