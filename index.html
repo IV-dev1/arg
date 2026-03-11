@@ -61,6 +61,7 @@ async function submitPhrase(){
   const data = await res.json();
 
   const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = "";
 
   if(data.success){
 
@@ -70,16 +71,29 @@ async function submitPhrase(){
       }
 
       if(data.type === "text"){
-        resultDiv.innerText = data.content;
+        typeWriter(data.content, resultDiv);
       }
 
   }else{
-      resultDiv.innerText = "Phrase rejected.";
+      typeWriter("Phrase rejected.", resultDiv);
   }
 
 }
 
-</script>
+function typeWriter(text, element, speed = 35){
+  let i = 0;
 
+  function typing(){
+    if(i < text.length){
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    }
+  }
+
+  typing();
+}
+
+</script>
 </body>
 </html>
