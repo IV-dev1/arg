@@ -119,12 +119,13 @@ function terminalThenType(logLines, finalText, element, delayBetween = 1000) {
   printLine();
 }
 
-function typeWriter(text, element, speed = 30){
+function typeWriter(text, element, speed = 20){
   let i = 0;
 
   function typing(){
     if(i < text.length){
-      element.innerHTML += text.charAt(i);
+      const char = text.charAt(i);
+      element.innerHTML += (char === "\n" ? "<br>" : char);
       i++;
       setTimeout(typing, speed);
     }
