@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Transmission Terminal</title>
 
+<style>
+body{
+    background:black;
+    color:#00ff9c;
+    font-family:monospace;
+    text-align:center;
+    margin-top:100px;
+}
+
+input{
+    background:black;
+    border:1px solid #00ff9c;
+    color:#00ff9c;
+    padding:10px;
+}
+
+button{
+    background:#00ff9c;
+    border:none;
+    padding:10px;
+}
+
+#result{
+    margin-top:30px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>TRANSMISSION TERMINAL</h1>
+
+<p>Enter Phrase</p>
+
+<input id="phraseInput" type="text">
+<button onclick="submitPhrase()">Submit</button>
+
+<div id="result"></div>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbyMYdQ-lrk0TNKZAizU5bd7XEWJkWTOpcH8KnBT7EevcPqJEBY3hG-mCoWWx0MmFOsa/exec";
+
+async function submitPhrase(){
+
+  const phrase = document.getElementById("phraseInput").value;
+
+  const res = await fetch(API_URL,{
+    method:"POST",
+    body: JSON.stringify({
+      phrase: phrase
+    })
+  });
+
+  const data = await res.json();
+
+  const resultDiv = document.getElementById("result");
+
+  if(data.success){
+
+      if(data.type === "link"){
+        resultDiv.innerHTML =
+          `<a href="${data.content}" style="color:#00ff9c">ACCESS UNLOCKED</a>`;
+      }
+
+      if(data.type === "text"){
+        resultDiv.innerText = data.content;
+      }
+
+  }else{
+      resultDiv.innerText = "Phrase rejected.";
+  }
+
+}
+
+</script>
+
+</body>
+</html>
