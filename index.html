@@ -123,29 +123,25 @@ function terminalThenType(logLines, finalText, element, delayBetween = 1000) {
 function typeWriter(text, element, speeds = [], delayBetweenLines = 700) {
   const lines = text.split("\n");
   let lineIndex = 0;
+  let cursor; // single cursor for all lines
+
+  // create blinking cursor once
+  cursor = document.createElement("span");
+  cursor.className = "cursor";
+  cursor.innerText = "_";
+  element.appendChild(cursor);
 
   function typeLine(line, speed, callback) {
     let i = 0;
-    // create a span for this line
-    const lineSpan = document.createElement("span");
-    element.appendChild(lineSpan);
-
-    // add blinking cursor
-    const cursor = document.createElement("span");
-    cursor.className = "cursor";
-    cursor.innerText = "_";
-    element.appendChild(cursor);
 
     function typingChar() {
       if (i < line.length) {
-        lineSpan.innerHTML += line.charAt(i);
+        // insert before cursor so it stays at the end
+        element.insertBefore(document.createTextNode(line.charAt(i)), cursor);
         i++;
         setTimeout(typingChar, speed);
       } else {
-        // remove cursor at end of line
-        cursor.remove();
-        element.appendChild(document.createElement("br"));
-        setTimeout(callback, delayBetweenLines);
+        setTimeout(callback, delayBetweenLines); // wait before next line
       }
     }
 
@@ -156,6 +152,8 @@ function typeWriter(text, element, speeds = [], delayBetweenLines = 700) {
     if (lineIndex < lines.length) {
       const speed = speeds[lineIndex] !== undefined ? speeds[lineIndex] : 30;
       typeLine(lines[lineIndex], speed, () => {
+        // add <br> after finishing this line, cursor stays at new line start
+        element.insertBefore(document.createElement("br"), cursor);
         lineIndex++;
         nextLine();
       });
