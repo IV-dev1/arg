@@ -83,16 +83,48 @@ async function submitPhrase(){
       }
 
       if(data.type === "text"){
-        typeWriter(data.content, resultDiv);
+        terminalThenType(
+        [
+        "> ACCESSING ARCHIVE...",
+        "> DECRYPTING PAYLOAD...",
+        "> MESSAGE FOUND"
+        ],
+        data.content,
+        resultDiv
+        );
       }
 
   }else{
-      typeWriter("Phrase rejected.", resultDiv);
+      terminalThenType
+        [
+        "> ACCESSING ARCHIVE...",
+        "> CONNECTING...",
+        "> CONNECTION LOST"
+        ],
+        "Data Rejected.",
+        resultDiv
+        );
   }
 
 }
 
-function typeWriter(text, element, speed = 35){
+function terminalThenType(logLines, finalText, element, speed = 35, delayBetween = 600) {
+  let lineIndex = 0;
+
+  function printLine() {
+    if (lineIndex < logLines.length) {
+      element.innerHTML += logLines[lineIndex] + "<br>";
+      lineIndex++;
+      setTimeout(printLine, delayBetween);
+    } else {
+      typeWriter(finalText, element);
+    }
+  }
+
+  printLine();
+}
+
+function typeWriter(text, element, speed = 20){
   let i = 0;
 
   function typing(){
