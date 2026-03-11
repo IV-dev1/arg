@@ -29,15 +29,15 @@ button{
     margin-top:30px;
 }
 
-#result::after {
-    content: "_";
-    animation: blink 1s infinite;
+.cursor {
+  display: inline;
+  animation: blink 1s infinite;
 }
 
 @keyframes blink {
-    0% {opacity:1;}
-    50% {opacity:0;}
-    100% {opacity:1;}
+  0% {opacity:1;}
+  50% {opacity:0;}
+  100% {opacity:1;}
 }
     
 </style>
@@ -120,28 +120,41 @@ function terminalThenType(logLines, finalText, element, delayBetween = 1000) {
   printLine();
 }
 
-function typeWriter(text, element, speeds = [], delayBetweenLines = 400) {
-  const lines = text.split("\n"); // split text by line breaks
+function typeWriter(text, element, speeds = [], delayBetweenLines = 700) {
+  const lines = text.split("\n");
   let lineIndex = 0;
 
   function typeLine(line, speed, callback) {
     let i = 0;
+    // create a span for this line
+    const lineSpan = document.createElement("span");
+    element.appendChild(lineSpan);
+
+    // add blinking cursor
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+    cursor.innerText = "_";
+    element.appendChild(cursor);
+
     function typingChar() {
       if (i < line.length) {
-        element.innerHTML += line.charAt(i);
+        lineSpan.innerHTML += line.charAt(i);
         i++;
         setTimeout(typingChar, speed);
       } else {
-        element.innerHTML += "<br>"; // move to next line
-        setTimeout(callback, delayBetweenLines); // wait before next line
+        // remove cursor at end of line
+        cursor.remove();
+        element.appendChild(document.createElement("br"));
+        setTimeout(callback, delayBetweenLines);
       }
     }
+
     typingChar();
   }
 
   function nextLine() {
     if (lineIndex < lines.length) {
-      const speed = speeds[lineIndex] !== undefined ? speeds[lineIndex] : 30; // default speed
+      const speed = speeds[lineIndex] !== undefined ? speeds[lineIndex] : 30;
       typeLine(lines[lineIndex], speed, () => {
         lineIndex++;
         nextLine();
