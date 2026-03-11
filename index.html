@@ -85,7 +85,8 @@ async function submitPhrase(){
       if(data.type === "text"){
         typeWriter(
         data.content,
-        resultDiv
+        resultDiv,
+        [50, 50]
         );
       }
 
@@ -119,19 +120,36 @@ function terminalThenType(logLines, finalText, element, delayBetween = 1000) {
   printLine();
 }
 
-function typeWriter(text, element, speed = 30){
-  let i = 0;
+function typeWriter(text, element, speeds = []) {
+  const lines = text.split("\n"); // split text by line breaks
+  let lineIndex = 0;
 
-  function typing(){
-    if(i < text.length){
-      const char = text.charAt(i);
-      element.innerHTML += (char === "\n" ? "<br>" : char);
-      i++;
-      setTimeout(typing, speed);
+  function typeLine(line, speed, callback) {
+    let i = 0;
+    function typingChar() {
+      if (i < line.length) {
+        element.innerHTML += line.charAt(i);
+        i++;
+        setTimeout(typingChar, speed);
+      } else {
+        element.innerHTML += "<br>"; // move to next line
+        callback();
+      }
+    }
+    typingChar();
+  }
+
+  function nextLine() {
+    if (lineIndex < lines.length) {
+      const speed = speeds[lineIndex] !== undefined ? speeds[lineIndex] : 30; // default speed if not specified
+      typeLine(lines[lineIndex], speed, () => {
+        lineIndex++;
+        nextLine();
+      });
     }
   }
 
-  typing();
+  nextLine();
 }
 
 </script>
